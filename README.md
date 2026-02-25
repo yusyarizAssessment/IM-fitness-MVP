@@ -116,3 +116,21 @@ The frontend will run on `http://localhost:5173`
 - Delete members
 - Search members by name, email or membership type
 - Responsive design for desktop and mobile
+
+## Excel Import Feature
+
+A sample Excel template is provided in the `samples/` folder. Download `members_template.xlsx` and use it directly to test the bulk import feature via the **Import Excel** button on the dashboard.
+
+If you want to add your own data, open the template and fill in your member data following the same format. Make sure the column headers remain exactly as they are.
+
+### Excel Column Format
+
+| Column | Accepted Values |
+|--------|----------------|
+| full_name | Any text |
+| email | Valid email address |
+| phone | Any text |
+| date_of_birth | YYYY-MM-DD format (e.g. 1990-05-15) |
+| gender | Male, Female, Other |
+| membership_type | Basic, Standard, Premium |
+| membership_status | Active, Inactive, Suspended |
