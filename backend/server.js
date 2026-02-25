@@ -6,6 +6,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
 const memberRoutes = require('./routes/memberRoutes');
+const importRoutes = require('./routes/importRoutes');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/members', memberRoutes);
+app.use('/api/import', importRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Fitness Centre API is running!' });

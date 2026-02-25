@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
 import Navbar from '../components/Navbar';
@@ -11,6 +11,7 @@ function Dashboard() {
   const [selectedMember, setSelectedMember] = useState(null);
   const [search, setSearch] = useState('');
   const { token } = useAuth();
+  const fileInputRef = useRef(null);
 
   const axiosConfig = {
     headers: { Authorization: `Bearer ${token}` },
@@ -65,6 +66,29 @@ function Dashboard() {
     }
   };
 
+  const handleImport = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/import', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert(response.data.message);
+      fetchMembers();
+    } catch {
+      alert('Failed to import Excel file.');
+    }
+
+    fileInputRef.current.value = '';
+  };
+
   const filteredMembers = members.filter((m) =>
     m.full_name.toLowerCase().includes(search.toLowerCase()) ||
     m.email?.toLowerCase().includes(search.toLowerCase()) ||
@@ -87,9 +111,21 @@ function Dashboard() {
             <h2 style={styles.heading}>Members</h2>
             <p style={styles.subheading}>{members.length} total members</p>
           </div>
-          <button onClick={handleAdd} style={styles.addButton}>
-            + Add Member
-          </button>
+          <div style={styles.buttonGroup}>
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              ref={fileInputRef}
+              onChange={handleImport}
+              style={{ display: 'none' }}
+            />
+            <button onClick={() => fileInputRef.current.click()} style={styles.importButton}>
+              Import Excel
+            </button>
+            <button onClick={handleAdd} style={styles.addButton}>
+              + Add Member
+            </button>
+          </div>
         </div>
 
         <div style={styles.searchBar}>
@@ -176,7 +212,7 @@ const styles = {
   topBar: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: '24px',
     flexWrap: 'wrap',
     gap: '12px',
@@ -266,6 +302,22 @@ const styles = {
     padding: '60px',
     color: '#666',
     fontSize: '16px',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '12px',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  importButton: {
+    padding: '10px 24px',
+    background: 'white',
+    color: '#0f3460',
+    border: '2px solid #0f3460',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
   },
 };
 
