@@ -116,6 +116,7 @@ The frontend will run on `http://localhost:5173`
 - Delete members
 - Search members by name, email or membership type
 - Responsive design for desktop and mobile
+- - Bulk import members via Excel file
 
 ## Excel Import Feature
 
